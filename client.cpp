@@ -247,6 +247,8 @@ void *Thread_Listener(void *args) {
 						else {
 							if (server_response->messagecommunication().sender() != username)
 								cout << "(p) from @" << server_response->messagecommunication().sender() << " to You: " << server_response->messagecommunication().message() << endl;
+							else if (server_response->messagecommunication().recipient() != username)
+								cout << "(p) from You to @ " << server_response->messagecommunication().recipient() << ": " << server_response->messagecommunication().message() << endl;
 							else
 								cout << "(p) from You to Yourself: " << server_response->messagecommunication().message() << endl;
 						}
