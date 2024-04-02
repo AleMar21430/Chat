@@ -236,19 +236,20 @@ void *Thread_Listener(void *args) {
 					break;
 				}
 				case 4: { // message
-				cout << server_response->servermessage() << endl;
-				if (server_response->messagecommunication().has_recipient() and server_response->messagecommunication().has_message() and server_response->messagecommunication().has_sender()) {	
-					if (server_response->messagecommunication().recipient() == "everyone") {
-						if (server_response->messagecommunication().sender() != username)
-							cout << "(g) from @" << server_response->messagecommunication().sender() << " to @everyone: " << server_response->messagecommunication().message() << endl;
-						else
-							cout << "(g) from You: " << server_response->messagecommunication().message() << endl;
-					}
-					else
-						if (server_response->messagecommunication().sender() != username)
-							cout << "(p) from @" << server_response->messagecommunication().sender() << " to You: " << server_response->messagecommunication().message() << endl;
-						else
-							cout << "(p) from You to @ " << server_response->messagecommunication().recipient() << ": " << server_response->messagecommunication().message() << endl;
+					cout << server_response->servermessage() << endl;
+					if (server_response->messagecommunication().has_recipient() and server_response->messagecommunication().has_message() and server_response->messagecommunication().has_sender()) {	
+						if (server_response->messagecommunication().recipient() == "everyone") {
+							if (server_response->messagecommunication().sender() != username)
+								cout << "(g) from @" << server_response->messagecommunication().sender() << " to @everyone: " << server_response->messagecommunication().message() << endl;
+							else
+								cout << "(g) from You: " << server_response->messagecommunication().message() << endl;
+						}
+						else {
+							if (server_response->messagecommunication().sender() != username)
+								cout << "(p) from @" << server_response->messagecommunication().sender() << " to You: " << server_response->messagecommunication().message() << endl;
+							else
+								cout << "(p) from You to Yourself: " << server_response->messagecommunication().message() << endl;
+						}
 					}
 					break;
 				}
