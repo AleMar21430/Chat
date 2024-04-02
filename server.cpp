@@ -125,7 +125,7 @@ void *Worker_Thread(void *params) {
 						const double elapsed_secs = chrono::duration_cast<std::chrono::duration<double>>(end - client.second->last_active_time).count();
 						if (elapsed_secs >= 5.0) {
 							client.second->status = "inactivo";
-							cout << "Timeout de @" << client.second->username << "por inactividad" << endl;
+							cout << "Timeout de @" << client.second->username << " por inactividad: " << elapsed_secs << "s" << endl;
 						} else {
 							cout << "Delta de actividad de @" << client.second->username << ": " << elapsed_secs << endl;
 						}
@@ -282,7 +282,7 @@ void *Worker_Thread(void *params) {
 						const double elapsed_secs = chrono::duration_cast<std::chrono::duration<double>>(end - client.second->last_active_time).count();
 							if (elapsed_secs >= 5.0) {
 								client.second->status = "inactivo";
-								cout << "Timeout de @" << client.second->username << " por inactividad" << endl;
+								cout << "Timeout de @" << client.second->username << " por inactividad: " << elapsed_secs << "s" << endl;
 							} else {
 								cout << "Delta de actividad de @" << client.second->username << ": " << elapsed_secs << endl;
 							}
@@ -318,7 +318,7 @@ void *Worker_Thread(void *params) {
 						const double elapsed_secs = chrono::duration_cast<std::chrono::duration<double>>(end - connected_clients[client_request->users().user()]->last_active_time).count();
 						if (elapsed_secs >= 5.0) {
 							connected_clients[client_request->users().user()]->status = "inactivo";
-							cout << "Timeout de @" << connected_clients[client_request->users().user()]->username << " por inactividad" << endl;
+							cout << "Timeout de @" << connected_clients[client_request->users().user()]->username << " por inactividad: " << elapsed_secs << "s" << endl;
 						} else {
 							cout << "Delta de actividad de @" << client_request->users().user() << ": " << elapsed_secs << endl;
 						}
