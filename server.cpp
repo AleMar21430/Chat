@@ -235,6 +235,9 @@ void *Worker_Thread(void *params) {
 
 							connected_clients[user.username]->last_active_time = clock();
 							chat::MessageCommunication *response_message = new chat::MessageCommunication();
+							message_communication->set_sender(user.username);
+							message_communication->set_recipient(client_request->messagecommunication().recipient());
+							message_communication->set_message(client_request->messagecommunication().message());
 							server_response->set_allocated_messagecommunication(response_message);
 							server_response->set_servermessage("SUCCESS sending a private message to @" + client_request->messagecommunication().recipient());
 							server_response->set_code(200);
