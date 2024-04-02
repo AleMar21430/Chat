@@ -7,7 +7,7 @@ struct User {
 	int socket_node;
 	string username;
 	string status;
-	clock_t last_active_time;
+	chrono::_V2::steady_clock::time_point last_active_time;
 };
 
 void SendErrorResponse(int socketFd, string errorMsg);

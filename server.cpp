@@ -111,18 +111,23 @@ void *Worker_Thread(void *params) {
 				user.username = client_request->registration().username();
 				user.socket_node = socket_node;
 				user.status = "activo";
-				user.last_active_time = clock();
+				user.last_active_time = chrono::steady_clock::now();
 				strcpy(user.ip_address, client_params->ip_address);
 				connected_clients[user.username] = &user;
 				break;
 			}
 			case 2: { // Usuarios Conectados
 				try {
+					connected_clients[user.username]->last_active_time = chrono::steady_clock::now();
 					chat::ConnectedUsersResponse *connected_user_response = new chat::ConnectedUsersResponse();
 					for(pair<const string, User*> client : connected_clients){
-						if (isInactive(client.second->last_active_time)) {
+						const chrono::_V2::steady_clock::time_point end = chrono::steady_clock::now();
+						const double elapsed_secs = chrono::duration_cast<std::chrono::duration<double>>(end - client.second->last_active_time).count();
+						if (elapsed_secs >= 5.0) {
 							client.second->status = "inactivo";
 							cout << "Timeout de @" << client.second->username << "por inactividad" << endl;
+						} else {
+							cout << "Delta de actividad de @" << client.second->username << ": " << elapsed_secs << endl;
 						}
 						chat::UserInfo *user_info = new chat::UserInfo();
 						user_info->set_username(client.second->username);
@@ -179,7 +184,7 @@ void *Worker_Thread(void *params) {
 					try {
 						for (pair<const string, User*> client : connected_clients){
 							if (client.first==client_request->messagecommunication().sender()) {
-								client.second->last_active_time = clock();
+								client.second->last_active_time = chrono::steady_clock::now();
 								chat::MessageCommunication *message_communication = new chat::MessageCommunication();
 								message_communication->set_sender(user.username);
 								message_communication->set_recipient("everyone");
@@ -233,7 +238,7 @@ void *Worker_Thread(void *params) {
 							send(connected_clients[client_request->messagecommunication().recipient()]->socket_node, message_buffer, message_stream.size() + 1, 0);
 							server_response->Clear();
 
-							connected_clients[user.username]->last_active_time = clock();
+							connected_clients[user.username]->last_active_time = chrono::steady_clock::now();
 							chat::MessageCommunication *response_message = new chat::MessageCommunication();
 							response_message->set_sender(user.username);
 							response_message->set_recipient(client_request->messagecommunication().recipient());
@@ -270,11 +275,16 @@ void *Worker_Thread(void *params) {
 			case 5: { // Info Usuario Particular
 				if (client_request->users().user() == "everyone") {
 					try {
+						connected_clients[user.username]->last_active_time = chrono::steady_clock::now();
 						chat::ConnectedUsersResponse *connected_user_response = new chat::ConnectedUsersResponse();
 						for( pair<const string, User*> client : connected_clients) {
-							if (isInactive(client.second->last_active_time)) {
+						const chrono::_V2::steady_clock::time_point end = chrono::steady_clock::now();
+						const double elapsed_secs = chrono::duration_cast<std::chrono::duration<double>>(end - client.second->last_active_time).count();
+							if (elapsed_secs >= 5.0) {
 								client.second->status = "inactivo";
-								cout << "Timeout de @" << client.second->username << "por inactividad" << endl;
+								cout << "Timeout de @" << client.second->username << " por inactividad" << endl;
+							} else {
+								cout << "Delta de actividad de @" << client.second->username << ": " << elapsed_secs << endl;
 							}
 							chat::UserInfo *user_info = new chat::UserInfo();
 							user_info->set_username(client.second->username);
@@ -301,11 +311,16 @@ void *Worker_Thread(void *params) {
 					}
 				}
 				else {
-					chat::UserInfo *user_info = new chat::UserInfo();
 					try {
-						if (isInactive(connected_clients[client_request->users().user()]->last_active_time)) {
+						chat::UserInfo *user_info = new chat::UserInfo();
+						connected_clients[user.username]->last_active_time = chrono::steady_clock::now();
+						const chrono::_V2::steady_clock::time_point end = chrono::steady_clock::now();
+						const double elapsed_secs = chrono::duration_cast<std::chrono::duration<double>>(end - connected_clients[client_request->users().user()]->last_active_time).count();
+						if (elapsed_secs >= 5.0) {
 							connected_clients[client_request->users().user()]->status = "inactivo";
-							cout << "Timeout de @" << connected_clients[client_request->users().user()]->username << "por inactividad" << endl;
+							cout << "Timeout de @" << connected_clients[client_request->users().user()]->username << " por inactividad" << endl;
+						} else {
+							cout << "Delta de actividad de @" << client_request->users().user() << ": " << elapsed_secs << endl;
 						}
 						user_info->set_username(connected_clients[client_request->users().user()]->username);
 						user_info->set_status(connected_clients[client_request->users().user()]->status);

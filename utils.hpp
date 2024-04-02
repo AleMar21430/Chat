@@ -1,7 +1,5 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include <sys/socket.h>
-#include <arpa/inet.h>
 #include <arpa/inet.h>
 #include <netdb.h>
 
@@ -47,8 +45,8 @@ inline string strEndSpace(const vector<string>& i_tokens, const size_t& i_start)
 	);
 }
 
-inline bool isInactive(const clock_t& start) {
-    const clock_t end = clock();
-    const double elapsed_secs = double(end - start) / CLOCKS_PER_SEC;
+inline bool isInactive(const chrono::_V2::steady_clock::time_point& start) {
+    const chrono::_V2::steady_clock::time_point end = chrono::steady_clock::now();
+    const double elapsed_secs = chrono::duration_cast<std::chrono::duration<double>>(end - start).count();
     return elapsed_secs >= 5.0;
 }
