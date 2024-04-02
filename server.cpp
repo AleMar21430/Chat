@@ -122,6 +122,7 @@ void *Worker_Thread(void *params) {
 					for(pair<const string, User*> client : connected_clients){
 						if (isInactive(client.second->last_active_time)) {
 							client.second->status = "inactivo";
+							cout << "Timeout de @" << client.second->username << "por inactividad" << endl;
 						}
 						else {
 							client.second->status = "activo";
@@ -276,6 +277,7 @@ void *Worker_Thread(void *params) {
 						for( pair<const string, User*> client : connected_clients) {
 							if (isInactive(client.second->last_active_time)) {
 								client.second->status = "inactivo";
+								cout << "Timeout de @" << client.second->username << "por inactividad" << endl;
 							}
 							else {
 								client.second->status = "activo";
@@ -310,6 +312,7 @@ void *Worker_Thread(void *params) {
 					try {
 						if (isInactive(connected_clients[client_request->users().user()]->last_active_time)) {
 							connected_clients[client_request->users().user()]->status = "inactivo";
+							cout << "Timeout de @" << connected_clients[client_request->users().user()]->username << "por inactividad" << endl;
 						}
 						else {
 							connected_clients[client_request->users().user()]->status = "activo";
