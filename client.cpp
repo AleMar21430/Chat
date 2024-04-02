@@ -222,21 +222,25 @@ void *Thread_Listener(void *args) {
 		if (server_response->code() == 200) {
 			switch (server_response->option()) {
 				case 1: { // register user
-					cout << server_response->servermessage() << endl;
+					if (server_response->has_servermessage())
+						cout << server_response->servermessage() << endl;
 					break;
 				}
 				case 2: { // all users info
-					cout << server_response->servermessage() << endl;
+					if (server_response->has_servermessage())
+						cout << server_response->servermessage() << endl;
 					for(int i = 0; i < server_response->connectedusers().connectedusers_size(); i++)
 						cout << "Username [ @" << server_response->connectedusers().connectedusers(i).username() << " ] IP [ " << server_response->connectedusers().connectedusers(i).ip() << " ] Status [ " << server_response->connectedusers().connectedusers(i).status() << " ]" << endl;
 					break;
 				}
 				case 3: { // cambio de estado
-					cout << server_response->servermessage() << endl;
+					if (server_response->has_servermessage())
+						cout << server_response->servermessage() << endl;
 					break;
 				}
 				case 4: { // message
-					cout << server_response->servermessage() << endl;
+					if (server_response->has_servermessage())
+						cout << server_response->servermessage() << endl;
 					if (server_response->messagecommunication().has_recipient() and server_response->messagecommunication().has_message() and server_response->messagecommunication().has_sender()) {	
 						if (server_response->messagecommunication().recipient() == "everyone") {
 							if (server_response->messagecommunication().sender() != username)
@@ -256,7 +260,8 @@ void *Thread_Listener(void *args) {
 					break;
 				}
 				case 5: { // user info
-					cout << server_response->servermessage() << endl;
+					if (server_response->has_servermessage())
+						cout << server_response->servermessage() << endl;
 					if (server_response->has_userinforesponse())
 						cout << "Username [ @" << server_response->userinforesponse().username() << " ] IP [ " << server_response->userinforesponse().ip() << " ] Status [ " << server_response->userinforesponse().status() << " ]" << endl;
 					break;
