@@ -236,6 +236,7 @@ void *Thread_Listener(void *args) {
 					break;
 				}
 				case 4: { // message
+				if (server_response->messagecommunication().has_recipient() and server_response->messagecommunication().has_message() and server_response->messagecommunication().has_sender()) {
 					cout << server_response->servermessage() << endl;
 					if (server_response->messagecommunication().recipient() == "everyone") {
 						if (server_response->messagecommunication().sender() != username)
@@ -248,6 +249,7 @@ void *Thread_Listener(void *args) {
 							cout << "(p) " << server_response->servermessage() << endl << "from @" << server_response->messagecommunication().sender() << " to You: " << server_response->messagecommunication().message() << endl;
 						else
 							cout << "(p) from You to Yourself: " << server_response->messagecommunication().message() << endl;
+					}
 					break;
 				}
 				case 5: { // user info

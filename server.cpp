@@ -124,16 +124,12 @@ void *Worker_Thread(void *params) {
 							client.second->status = "inactivo";
 							cout << "Timeout de @" << client.second->username << "por inactividad" << endl;
 						}
-						else {
-							client.second->status = "activo";
-						}
 						chat::UserInfo *user_info = new chat::UserInfo();
 						user_info->set_username(client.second->username);
 						user_info->set_status(client.second->status);
 						user_info->set_ip(client.second->ip_address);
 						connected_user_response->add_connectedusers()->CopyFrom(*user_info);
 					}
-					connected_clients[user.username]->last_active_time = clock();
 					server_response->set_servermessage("SUCCESS receiving info of all connected users");
 					server_response->set_allocated_connectedusers(connected_user_response);
 					server_response->set_option(2);
@@ -156,7 +152,6 @@ void *Worker_Thread(void *params) {
 			case 3: { // Cambio de Estado
 				try {
 					connected_clients[user.username]->status = client_request->change().status();
-					connected_clients[user.username]->last_active_time = clock();
 					chat::ChangeStatus *change_status = new chat::ChangeStatus();
 					change_status->set_username(client_request->change().username());
 					change_status->set_status(client_request->change().status());
@@ -240,7 +235,6 @@ void *Worker_Thread(void *params) {
 
 							connected_clients[user.username]->last_active_time = clock();
 							chat::MessageCommunication *response_message = new chat::MessageCommunication();
-							response_message->set_message("");
 							server_response->set_allocated_messagecommunication(response_message);
 							server_response->set_servermessage("SUCCESS sending a private message to @" + client_request->messagecommunication().recipient());
 							server_response->set_code(200);
@@ -279,16 +273,12 @@ void *Worker_Thread(void *params) {
 								client.second->status = "inactivo";
 								cout << "Timeout de @" << client.second->username << "por inactividad" << endl;
 							}
-							else {
-								client.second->status = "activo";
-							}
 							chat::UserInfo *user_info = new chat::UserInfo();
 							user_info->set_username(client.second->username);
 							user_info->set_status(client.second->status);
 							user_info->set_ip(client.second->ip_address);
 							connected_user_response->add_connectedusers()->CopyFrom(*user_info);
 						}
-						connected_clients[user.username]->last_active_time = clock();
 						server_response->set_servermessage("SUCCESS retreiving info of all users");
 						server_response->set_allocated_connectedusers(connected_user_response);
 						server_response->set_option(2);
@@ -314,10 +304,6 @@ void *Worker_Thread(void *params) {
 							connected_clients[client_request->users().user()]->status = "inactivo";
 							cout << "Timeout de @" << connected_clients[client_request->users().user()]->username << "por inactividad" << endl;
 						}
-						else {
-							connected_clients[client_request->users().user()]->status = "activo";
-						}
-						connected_clients[user.username]->last_active_time = clock();
 						user_info->set_username(connected_clients[client_request->users().user()]->username);
 						user_info->set_status(connected_clients[client_request->users().user()]->status);
 						user_info->set_ip(connected_clients[client_request->users().user()]->ip_address);
