@@ -118,6 +118,7 @@ void *Worker_Thread(void *params) {
 			}
 			case 2: { // Usuarios Conectados
 				try {
+					connected_clients[user.username]->status = "activo";
 					connected_clients[user.username]->last_active_time = chrono::steady_clock::now();
 					chat::ConnectedUsersResponse *connected_user_response = new chat::ConnectedUsersResponse();
 					for(pair<const string, User*> client : connected_clients){
@@ -185,6 +186,7 @@ void *Worker_Thread(void *params) {
 						for (pair<const string, User*> client : connected_clients){
 							if (client.first==client_request->messagecommunication().sender()) {
 								client.second->last_active_time = chrono::steady_clock::now();
+								client.second->status = "activo";
 								chat::MessageCommunication *message_communication = new chat::MessageCommunication();
 								message_communication->set_sender(user.username);
 								message_communication->set_recipient("everyone");
@@ -239,6 +241,7 @@ void *Worker_Thread(void *params) {
 							server_response->Clear();
 
 							connected_clients[user.username]->last_active_time = chrono::steady_clock::now();
+							connected_clients[user.username]->status = "activo";
 							chat::MessageCommunication *response_message = new chat::MessageCommunication();
 							response_message->set_sender(user.username);
 							response_message->set_recipient(client_request->messagecommunication().recipient());
@@ -276,6 +279,7 @@ void *Worker_Thread(void *params) {
 				if (client_request->users().user() == "everyone") {
 					try {
 						connected_clients[user.username]->last_active_time = chrono::steady_clock::now();
+						connected_clients[user.username]->status = "activo";
 						chat::ConnectedUsersResponse *connected_user_response = new chat::ConnectedUsersResponse();
 						for( pair<const string, User*> client : connected_clients) {
 						const chrono::_V2::steady_clock::time_point end = chrono::steady_clock::now();
@@ -314,6 +318,7 @@ void *Worker_Thread(void *params) {
 					try {
 						chat::UserInfo *user_info = new chat::UserInfo();
 						connected_clients[user.username]->last_active_time = chrono::steady_clock::now();
+						connected_clients[user.username]->status = "activo";
 						const chrono::_V2::steady_clock::time_point end = chrono::steady_clock::now();
 						const double elapsed_secs = chrono::duration_cast<std::chrono::duration<double>>(end - connected_clients[client_request->users().user()]->last_active_time).count();
 						if (elapsed_secs >= 5.0) {
